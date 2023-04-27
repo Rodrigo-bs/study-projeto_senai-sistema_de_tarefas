@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="<?= URL ?>/assets/css/style.css">
+    <script src="https://kit.fontawesome.com/e6cd06e1cc.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/e6cd06e1cc.js" crossorigin="anonymous"></script>
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+    <title>Login</title>
+</head>
+<body class="login-body">
+    <div class="login">
+        <form action="/usuario/login" method="post">
+            <h1>Login</h1>
+
+            <div class="input-box">
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" placeholder="email@gmail.com">
+            </div>
+
+            <div class="input-box">
+                <label for="senha">Senha</label>
+                <input type="password" name="senha" id="senha" placeholder="******">
+            </div>
+
+            <?php if (isset($_SESSION['mensagem'])) { ?>
+                <div style="margin-top: 10px; padding: .2rem 1rem;" data-mensagem class="mensagem mensagem-<?= $_SESSION['mensagem_tipo'] ?>">
+                    <span><?= $_SESSION['mensagem'] ?></span>
+
+                    <button data-mensagem-button><i class='bx bx-x'></i></button>
+                </div>
+
+                <?php unset($_SESSION['mensagem'], $_SESSION['mensagem_tipo']) ?>
+            <?php }?>
+
+            <button class="button submit">Login</button>
+        </form>
+    </div>
+
+    <script src="<?= URL ?>/assets/js/mensagem.js"></script>
+</body>
+</html>

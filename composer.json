@@ -1,0 +1,21 @@
+{
+    "name": "rodri/senai",
+    "autoload": {
+        "psr-4": {
+            "Src\\": "src/"
+        },
+        "files": [
+            "src/core/constants.php",
+            "src/routes/Usuario.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Rodrigo da Silva",
+            "email": "74737267+Rodrigo-bs@users.noreply.github.com"
+        }
+    ],
+    "require": {
+        "robmorgan/phinx": "^0.13.4"
+    }
+}

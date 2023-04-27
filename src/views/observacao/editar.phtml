@@ -1,0 +1,28 @@
+<?php
+    $observacao = $data['observacao'];
+?>
+
+<div class="cabecalho">
+    <h2>Edição</h2>
+</div>
+
+<?php if (isset($_SESSION['mensagem'])) { ?>
+    <div data-mensagem class="mensagem mensagem-<?= $_SESSION['mensagem_tipo'] ?>">
+        <span><?= $_SESSION['mensagem'] ?></span>
+
+        <button data-mensagem-button><i class='bx bx-x'></i></button>
+    </div>
+
+    <?php unset($_SESSION['mensagem'], $_SESSION['mensagem_tipo']) ?>
+<?php }?>
+
+<div>
+    <form method="POST" action="/observacao/editar/<?= $observacao->getId(); ?>">
+        <div class="input-box">
+            <label for="descricao">Descrição <span>*<span></label>
+            <textarea name="descricao" id="descricao" rows="10"><?= $observacao->getDescricao(); ?></textarea>
+        </div>
+
+        <input type="submit" value="Editar" class="button submit">
+    </form>
+</div>

@@ -1,0 +1,75 @@
+<?php
+
+    $quantidade = $data['quantidadeDeTarefas'][0];
+    $quantidadePorPagina = 5;
+
+?>
+
+<div class="cabecalho">
+    <h2>Tarefas</h2>
+    
+    <div>
+        <a href="/tarefa/cadastro" class="button adicionar">Adicionar</a>
+    </div>
+</div>
+
+<?php if (isset($_SESSION['mensagem'])) { ?>
+    <div data-mensagem class="mensagem mensagem-<?= $_SESSION['mensagem_tipo'] ?>">
+        <span><?= $_SESSION['mensagem'] ?></span>
+
+        <button data-mensagem-button><i class='bx bx-x'></i></button>
+    </div>
+
+    <?php unset($_SESSION['mensagem'], $_SESSION['mensagem_tipo']) ?>
+<?php }?>
+
+<div class="content-listagem">
+    <table class="table-list">
+        <thead class="table-list_head">
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Descrição</th>
+                <th>Prioridade</th>
+                <th>Tipo</th>
+                <th>Data de Abertura</th>
+                <th>Responsável</th>
+            </tr>
+        </thead>
+        <tbody class="table-list_body">
+            <?php
+                if (count($data['listagem']) > 0) {
+                    foreach ($data['listagem'] as $tarefa) { ?>
+                        <tr>
+                            <td><a href="/tarefa/detalhar/<?= $tarefa->getId(); ?>"><?= $tarefa->getId(); ?></a></td>
+                            <td><?= $tarefa->getTitulo(); ?></td>
+                            <td><?= $tarefa->getDescricao(); ?></td>
+                            <td><?= $tarefa->getPrioridade(true); ?></td>
+                            <td><?= $tarefa->getTipo(true); ?></td>
+                            <td><?= $tarefa->getDataAbertura(true); ?></td>
+                            <?php foreach ($data['usuarios'] as $usuario) { if ($usuario->getId() == $tarefa->getIdResponsavel()) { ?>
+                                <td><?= $usuario->getNome() ?></td>
+                            <?php } }?>
+                        </tr>
+            <?php } } else { ?>
+                <tr>
+                    <td colspan="7" style="text-align: center;">Nenhuma tarefa registrada.</td>
+                </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+
+    <div class="contagem">
+        <?php if ($quantidade > $quantidadePorPagina) { 
+            $quantidadeDePaginas = (int) ($quantidade / $quantidadePorPagina) * $quantidadePorPagina; // Pego a quantidade de paginas
+        ?>
+            <a href="/tarefa/listar/0">&lt;</a>
+
+                <?php for ($i = $quantidadePorPagina; $i <= $quantidadeDePaginas; $i = $i + $quantidadePorPagina) { ?>
+                    <a href="/tarefa/listar/<?= $i ?>"><?= $i / $quantidadePorPagina ?></a> <!-- Listagem pagina por pagina -->
+                <?php } ?>
+                
+            <a href="/tarefa/listar/<?= $quantidadeDePaginas?>">&gt;</a>
+        <?php } ?>
+    </div>
+</div>

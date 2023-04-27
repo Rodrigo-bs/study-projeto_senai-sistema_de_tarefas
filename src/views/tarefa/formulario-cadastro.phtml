@@ -1,0 +1,58 @@
+<div class="cabecalho">
+    <h2>Cadastro de Tarefa</h2>
+</div>
+
+<?php if (isset($_SESSION['mensagem'])) { ?>
+    <div data-mensagem class="mensagem mensagem-<?= $_SESSION['mensagem_tipo'] ?>">
+        <span><?= $_SESSION['mensagem'] ?></span>
+
+        <button data-mensagem-button><i class='bx bx-x'></i></button>
+    </div>
+
+    <?php unset($_SESSION['mensagem'], $_SESSION['mensagem_tipo']) ?>
+<?php }?>
+
+<div class="container-formulario">
+    <form action="/tarefa/cadastro" method="POST">
+        <div class="container-inputs">
+            <div class="input-box">
+                <label for="titulo">Título <span style="color: red;">*</span></label>
+                <input type="text" name="titulo" id="titulo" placeholder="Título" required>
+            </div>
+
+            <div class="input-box">
+                <label for="tipo">Tipo <span style="color: red;">*</span></label>
+
+                <select name="tipo" id="tipo" required>
+                    <option>Selecione...</option>
+                    <option value="1">Incidente</option>
+                    <option value="2">Solicitação de Serviço</option>
+                    <option value="3">Melhorias</option>
+                    <option value="4">Projetos</option>
+                </select>
+            </div>
+
+            <div class="input-box">
+                <label for="prioridade">Prioridade <span style="color: red;">*</span></label>
+                
+                <select name="prioridade" id="prioridade" required>
+                    <option>Selecione...</option>
+                    <option value="1">Alta</option>
+                    <option value="2">Média</option>
+                    <option value="3">Baixa</option>
+                    <option value="4">Sem Prioridade</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="input-box">
+            <label for="descricao">Descrição <span style="color: red;">*</span></label>
+            <textarea placeholder="Descrição" name="descricao" id="descricao" rows="10" required></textarea>
+        </div>
+
+        <div class="button-box">
+            <input type="submit" value="Cadastrar" class="button submit">
+            <a href="/tarefa" class="button cancel">Cancelar</a>
+        </div>
+    </form>
+</div>

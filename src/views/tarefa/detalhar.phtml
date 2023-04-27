@@ -1,0 +1,105 @@
+<?php
+
+    /** @var Src\Entities\Tarefa */
+    $tarefa = $data['tarefa'];
+
+    /** @var Src\Entities\Usuario */
+    $usuario = $data['usuario'];
+
+    /** @var Src\Entities\Observacao */
+    $observacoes = $data['observacoes'];
+
+    /** @var Src\Entities\Observacao */
+    $observacaoAtual = array_pop($observacoes);
+
+    /** @var Src\Entities\Usuario */
+    $usuarioAtual;
+
+    foreach ($data['usuarios'] as $usuarioRegistro) {
+        if ($observacaoAtual && $usuarioRegistro->getId() == $observacaoAtual->getIdResponsavel()) {
+            $usuarioAtual = $usuarioRegistro;
+        }
+    }
+?>
+
+<div class="cabecalho">
+    <h2>Detalhes da Tarefa - #<?= $tarefa->getId(); ?></h2>
+</div>
+
+<?php if (isset($_SESSION['mensagem'])) { ?>
+    <div data-mensagem class="mensagem mensagem-<?= $_SESSION['mensagem_tipo'] ?>">
+        <span><?= $_SESSION['mensagem'] ?></span>
+
+        <button data-mensagem-button><i class='bx bx-x'></i></button>
+    </div>
+
+    <?php unset($_SESSION['mensagem'], $_SESSION['mensagem_tipo']) ?>
+<?php }?>
+
+<div class="container-detalhes">
+    <div class="container-detalhes_cabecalho">
+        <h2><?= $tarefa->getTitulo(); ?></h2>
+
+        <p>Responsável: <span><?= $usuario->getNome(); ?></span></p>
+
+        <?php if ($usuario->getId() != $data['usuario_id'] && $tarefa->getStatus() != '1') { ?>
+            <a class="button" href="/tarefa/assumir/<?= $tarefa->getId(); ?>/<?= $data['usuario_id']; ?>">Assumir Tarefa</a>
+        <?php }?>
+    </div>
+
+    <div class="container-detalhes_informacoes">
+        <textarea disabled><?= $tarefa->getDescricao(); ?></textarea>
+
+        <ul>
+            <li>
+                Prioridade: <span><?= $tarefa->getPrioridade(true); ?></span>
+            </li>
+            <li>
+                Tipo: <span><?= $tarefa->getTipo(true); ?> </span>
+            </li>
+            <li>
+                Criação: <span><?= $tarefa->getDataAbertura(true); ?> </span>
+            </li>
+            <li id="status">
+                Situação: <span id="<?= strtolower($tarefa->getStatus(true)); ?>"><?= $tarefa->getStatus(true); ?> </span>
+            </li>
+            <li>
+                <a class="button cancel <?= $tarefa->getStatus() == 1 || $usuario->getId() != $data['usuario_id'] ? 'disabled' : '' ?>" href="/tarefa/finalizar/<?= $tarefa->getId(); ?>">Finalizar Tarefa</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="container-detalhes_observacoes">
+        <form action="/observacao/cadastro/<?= $tarefa->getId(); ?>" method="POST">
+            <h2>Novas Observações</h2>
+
+            <textarea name="descricao" placeholder="Descrição..." <?= $data['usuario_id'] != $usuario->getId() || $tarefa->getStatus() == 1 ? 'disabled' : '' ?>></textarea>
+            <input type="submit" value="Salvar" class="button submit <?= $data['usuario_id'] != $usuario->getId() || $tarefa->getStatus() == 1 ? 'disabled' : '' ?>">
+        </form>
+
+        <nav class="observacao">
+            <h2>Observações</h2>
+
+            <?php if ($observacaoAtual) { ?>
+                <div class="observacao-atual">
+                    <h3>#<?= $observacaoAtual->getId(); ?> <?= $usuario->getNome(); ?> - <?= $observacaoAtual->getDataAbertura(true); ?></h3>
+                    <p><?= $observacaoAtual->getDescricao(); ?></p>
+                    <a class="button edit <?= $data['usuario_id'] != $usuario->getId() || $tarefa->getStatus() == 1 ? 'disabled' : '' || $usuarioAtual->getId() != $observacaoAtual->getIdResponsavel() ?>" href="/observacao/editar/<?= $observacaoAtual->getId(); ?>">Editar</a>
+                </div>
+            <?php } else { ?>
+                <p>Nenhuma Observação.</p>
+            <?php } ?>
+
+            <ul>
+                <?php foreach($observacoes as $observacao) { 
+                    foreach ($data['usuarios'] as $usuarioRegistro) {
+                        if ($usuarioRegistro->getId() == $observacao->getIdResponsavel()) { ?>
+                            <li>
+                                <h3>#<?= $observacao->getId(); ?> <?= $usuarioRegistro->getNome(); ?> - <?= $observacao->getDataAbertura(true); ?></h3>
+                                <p><?= $observacao->getDescricao(); ?></p>
+                            </li>
+                <?php } } } ?>
+            </ul>
+        </nav>
+    </div>
+</div>
